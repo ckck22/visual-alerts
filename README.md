@@ -11,11 +11,21 @@ The application follows a standard **Client-Server Architecture**:
 - **Database**: An H2 in-memory database (configurable to persistent SQL) for storing alert history and user preferences.
 
 ## Key Technical Features
-- **Cognitive Visual Signals**: Full-screen alert overlays using specific color wavelengths (Red #FF0000, Yellow #FFD700, Blue #0000FF) and blinking patterns (4Hz, 2Hz, 1Hz) optimized for human attention.
-- **Haptic Feedback**: Custom vibration patterns mapped to alert severity levels using the device's Taptic Engine.
+- **Adaptive Cognitive-Load Engine**:
+    - **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (Red-Blind), Deuteranopia (Green-Blind), and Tritanopia (Blue-Blind), ensuring universal perceptibility.
+    - **Context-Aware Visuals**: High-contrast modes and specific palettes for different vision deficiencies.
+- **Multisensory Integration**:
+    - **Blinking Animations**: 4Hz visual flashing for "RED" alerts to seize immediate attention.
+    - **Haptic Feedback**: Custom vibration patterns synchronized with alert severity.
+    - **Rich Notifications**: System notifications with attached images (e.g., Map location, Hazard photo).
+- **Expanded Alert Types**:
+    - **Earthquake**: Seismograph-style pulse visualization for immediate recognition.
+    - **Heavy Rain**: Dedicated flood/rain iconography.
+    - **Fire**: Critical thermal alert visuals.
+    - **Missing Person**: Blue-coded information alerts.
 - **Real-Time Integration**: Polls external government disaster APIs to fetch and standardize alert data.
 - **Background Processing**: Handles background fetch tasks to ensure alerts are received even when the app is not in the foreground.
-- **State Management**: Uses Zustand for efficient global state management on the client.
+- **State Management**: Uses Zustand for efficient global state management (Alerts + Settings).
 
 ## Technology Stack
 
@@ -24,7 +34,7 @@ The application follows a standard **Client-Server Architecture**:
 - **Language**: TypeScript 5.x
 - **State Management**: Zustand
 - **Notifications**: Expo Notifications, Firebase Messaging
-- **UI/UX**: Lottie Animations, Expo Haptics, Expo System UI
+- **UI/UX**: Vector Icons (MaterialCommunityIcons), Expo Haptics, Expo System UI
 
 ### Backend (API Server)
 - **Framework**: Spring Boot 3.2.0

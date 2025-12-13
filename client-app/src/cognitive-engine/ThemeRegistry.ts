@@ -9,7 +9,34 @@ export interface AlertTheme {
     defaultSubtitle: string;
 }
 
-export const ThemeRegistry: Record<AlertSeverity, AlertTheme> = {
+import { ColorBlindMode } from '../store/settingsStore';
+
+export const getTheme = (severity: AlertSeverity, mode: ColorBlindMode = ColorBlindMode.NONE): AlertTheme => {
+    const baseTheme = BaseThemes[severity];
+
+    // Accessibility Overrides
+    if (mode === ColorBlindMode.PROTANOPIA || mode === ColorBlindMode.DEUTERANOPIA) {
+        // Red-Green weakness: Avoid Red/Green confusion. Use Magenta/Blue-Yellow.
+        if (severity === 'RED') {
+            return { ...baseTheme, backgroundColor: '#D500F9' }; // Magenta/Purple for Danger
+        }
+        if (severity === 'YELLOW') {
+            return { ...baseTheme, backgroundColor: '#FFD600' }; // High Viz Yellow
+        }
+    } else if (mode === ColorBlindMode.TRITANOPIA) {
+        // Blue-Yellow weakness: Avoid Blue/Purple confusion. Use Cyan/Teal.
+        if (severity === 'BLUE') {
+            return { ...baseTheme, backgroundColor: '#00BFA5' }; // Teal/Cyan
+        }
+        if (severity === 'RED') {
+            return { ...baseTheme, backgroundColor: '#FF5252' }; // Salmon Red (distinct from black)
+        }
+    }
+
+    return baseTheme;
+};
+
+const BaseThemes: Record<AlertSeverity, AlertTheme> = {
     RED: {
         backgroundColor: '#D32F2F', // Deep Red
         textColor: '#FFFFFF',
@@ -35,3 +62,6 @@ export const ThemeRegistry: Record<AlertSeverity, AlertTheme> = {
         defaultSubtitle: '특징:\n노란색 셔츠, 강남역 인근',
     },
 };
+
+// Backwards compatibility layer if needed, or remove if fully refactored
+export const ThemeRegistry = BaseThemes;

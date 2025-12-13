@@ -41,4 +41,6 @@ yarn-error.log*
 
 # virtual machine crash logs
 hs_err_pid*
-replay_pid*
+
+# Secrets
+server-api/src/main/resources/application.properties

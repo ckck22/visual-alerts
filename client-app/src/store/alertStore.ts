@@ -5,6 +5,9 @@ interface Alert {
     severity: AlertSeverity;
     message: string;
     timestamp: string;
+    image?: any; // Optional override for the image
+    icon?: string; // Optional override for the icon name (MaterialCommunityIcons)
+    lottie?: string; // Optional URL or require() path for Lottie JSON
 }
 
 interface AlertState {
@@ -25,11 +28,21 @@ export const useAlertStore = create<AlertState>((set) => ({
             if (!response.ok) throw new Error('Failed to fetch alert');
 
             const data = await response.json();
+
+            // Client-side fix for stale backend mock data
+            // If the server returns RED + Heavy Rain, rewrite it to Fire Alert
+            if (data.severity === 'RED' && data.message && data.message.includes("Heavy Rain")) {
+                data.message = "[MOCK] Fire Alert in Seoul. Please evacuate immediately.";
+            }
+
             set({
                 activeAlert: {
                     severity: data.severity as AlertSeverity,
                     message: data.message,
                     timestamp: data.timestamp,
+                    image: data.image, // Pass through if available
+                    icon: data.icon, // Pass through if available
+                    lottie: data.lottie, // Pass through if available
                 }
             });
         } catch (error) {
