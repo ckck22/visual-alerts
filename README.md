@@ -14,20 +14,26 @@ The application implements a standard client-server architecture:
 
 - **Database**: An H2 in-memory database (configurable for persistent SQL storage) used for alert history and user preference storage.
 
-## Key Technical Features
+### Key Technical Features
 - **Adaptive Cognitive-Load Engine**:
-    - **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (Red-Blind), Deuteranopia (Green-Blind), and Tritanopia (Blue-Blind), ensuring universal perceptibility.
+    - **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (Red-Blind), Deuteranopia (Green-Blind), and Tritanopia (Blue-Blind).
+    - **Safety-First Logic**: Accessibility overrides take precedence over stylistic themes (e.g., Missile Green -> Magenta in Protanopia).
     - **Context-Aware Visuals**: High-contrast modes and specific palettes for different vision deficiencies.
+- **Official Government Integration**:
+    - **Real-Time Data**: Directly integrated with the **Ministry of Interior and Safety (DSSP-IF-00247)** API.
+    - **Standardized Mapping**: Accurately maps `MSG_CN`, `EMRG_STEP_NM`, and `DST_SE_NM` to app alerts.
 - **Multisensory Integration**:
     - **Blinking Animations**: 4Hz visual flashing for "RED" alerts to seize immediate attention.
     - **Haptic Feedback**: Custom vibration patterns synchronized with alert severity.
-    - **Rich Notifications**: System notifications with attached images (e.g., Map location, Hazard photo).
+    - **Rich Notifications**: System notifications with attached images.
 - **Expanded Alert Types**:
-    - **Earthquake**: Seismograph-style pulse visualization for immediate recognition.
+    - **Missile Warning**: Specialized "National Emergency Alert" with dedicated "Military Green" theme and "Rocket" iconography.
     - **Heavy Rain**: Dedicated flood/rain iconography.
     - **Fire**: Critical thermal alert visuals.
     - **Missing Person**: Blue-coded information alerts.
-- **Real-Time Integration**: Polls external government disaster APIs to fetch and standardize alert data.
+- **Language Support**:
+    - **Bilingual Interface**: Full support for **Korean** and **English** with real-time toggling.
+    - **Dynamic Content**: Auto-translates alert titles (e.g., "EVACUATE IMMEDIATELY") and buttons.
 - **Background Processing**: Handles background fetch tasks to ensure alerts are received even when the app is not in the foreground.
 - **State Management**: Uses Zustand for efficient global state management (Alerts + Settings).
 
