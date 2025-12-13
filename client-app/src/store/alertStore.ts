@@ -32,7 +32,10 @@ export const useAlertStore = create<AlertState>((set) => ({
             // Client-side fix for stale backend mock data
             // If the server returns RED + Heavy Rain, rewrite it to Fire Alert
             if (data.severity === 'RED' && data.message && data.message.includes("Heavy Rain")) {
-                data.message = "[MOCK] Fire Alert in Seoul. Please evacuate immediately.";
+                // We need to access the store state directly since this isn't a hook
+                const { language } = require('./settingsStore').useSettingsStore.getState();
+                const { translations } = require('../constants/translations');
+                data.message = translations[language].mockFireFix;
             }
 
             set({

@@ -3,77 +3,67 @@ import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Image, Animated
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { useAlertStore } from '../store/alertStore';
-import { getTheme } from '../cognitive-engine/ThemeRegistry';
+import { getTheme, BaseThemes } from '../cognitive-engine/ThemeRegistry';
 import { useSettingsStore, ColorBlindMode } from '../store/settingsStore';
+
+import { translations } from '../constants/translations';
 
 const FullScreenAlert = () => {
     const { activeAlert, setAlert, clearAlert, fetchLatestAlert } = useAlertStore();
-    const { colorBlindMode, cycleMode } = useSettingsStore();
+    const { colorBlindMode, language, cycleMode, toggleLanguage } = useSettingsStore();
 
-    // Animation value for blinking effect
+    // ... (Animation logic remains the same) ...
     const fadeAnim = React.useRef(new Animated.Value(1)).current;
 
     React.useEffect(() => {
         let blinkAnimation: Animated.CompositeAnimation | null = null;
-
         if (activeAlert && activeAlert.severity === 'RED') {
-            // Multisensory 2: Blinking Animation for Critical Alerts
             blinkAnimation = Animated.loop(
                 Animated.sequence([
-                    Animated.timing(fadeAnim, {
-                        toValue: 0.2, // Dim to 20%
-                        duration: 500,
-                        useNativeDriver: true,
-                    }),
-                    Animated.timing(fadeAnim, {
-                        toValue: 1, // Back to 100%
-                        duration: 500,
-                        useNativeDriver: true,
-                    }),
+                    Animated.timing(fadeAnim, { toValue: 0.2, duration: 500, useNativeDriver: true }),
+                    Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }),
                 ])
             );
             blinkAnimation.start();
         } else {
-            // Reset if not RED
             fadeAnim.setValue(1);
         }
-
-        return () => {
-            if (blinkAnimation) blinkAnimation.stop();
-        };
+        return () => { if (blinkAnimation) blinkAnimation.stop(); };
     }, [activeAlert]);
+
+    const t = translations[language];
 
     const handleTestFire = () => {
         setAlert({
             severity: 'RED',
-            message: '화재 발생\n밖으로 나가세요',
+            message: t.fireMsg,
             timestamp: new Date().toISOString(),
-            icon: 'fire-alert', // Explicit fire icon
+            icon: 'fire-alert',
         });
     };
 
     const handleTestRain = () => {
         setAlert({
             severity: 'YELLOW',
-            message: '집중 호우\n하천 범람 주의',
+            message: t.rainMsg,
             timestamp: new Date().toISOString(),
-            icon: 'weather-pouring', // Explicit heavy rain icon
+            icon: 'weather-pouring',
         });
     };
 
-    const handleTestEarthquake = () => {
+    const handleTestMissile = () => {
         setAlert({
             severity: 'RED',
-            message: '지진 발생\n책상 아래로 대피하세요',
+            message: t.missileMsg,
             timestamp: new Date().toISOString(),
-            icon: 'pulse', // Seismograph-style icon
+            icon: 'rocket-launch', // Missile Icon
         });
     };
 
     const handleTestMissing = () => {
         setAlert({
             severity: 'BLUE',
-            message: '실종 아동 발생\n도움을 주세요',
+            message: t.missingMsg,
             timestamp: new Date().toISOString(),
         });
     };
@@ -81,50 +71,75 @@ const FullScreenAlert = () => {
     if (!activeAlert) {
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>No Active Alerts</Text>
+                <Text style={styles.text}>{t.noActiveAlerts}</Text>
 
-                {/* Accessibility Toggle */}
-                <TouchableOpacity style={styles.accessibilityButton} onPress={cycleMode}>
-                    <MaterialCommunityIcons name="eye" size={24} color="#333" />
-                    <Text style={styles.accessibilityText}>
-                        Color Mode: {colorBlindMode}
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.settingsRow}>
+                    {/* Accessibility Toggle */}
+                    <TouchableOpacity style={styles.accessibilityButton} onPress={cycleMode}>
+                        <MaterialCommunityIcons name="eye" size={24} color="#333" />
+                        <Text style={styles.accessibilityText}>
+                            {t.colorMode}: {colorBlindMode}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {/* Language Toggle */}
+                    <TouchableOpacity style={[styles.accessibilityButton, { marginLeft: 10 }]} onPress={toggleLanguage}>
+                        <MaterialCommunityIcons name="translate" size={24} color="#333" />
+                        <Text style={styles.accessibilityText}>
+                            {language === 'ko' ? '한국어' : 'English'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={[styles.testButton, { backgroundColor: '#D32F2F' }]} onPress={handleTestFire}>
-                        <Text style={styles.buttonText}>🔥 Fire Alert</Text>
+                        <Text style={styles.buttonText}>{t.fireAlert}</Text>
                     </TouchableOpacity>
                     <View style={{ height: 10 }} />
                     <TouchableOpacity style={[styles.testButton, { backgroundColor: '#FBC02D' }]} onPress={handleTestRain}>
-                        <Text style={[styles.buttonText, { color: 'black' }]}>🌧️ Heavy Rain</Text>
+                        <Text style={[styles.buttonText, { color: 'black' }]}>{t.heavyRain}</Text>
                     </TouchableOpacity>
                     <View style={{ height: 10 }} />
-                    <TouchableOpacity style={[styles.testButton, { backgroundColor: '#5D4037' }]} onPress={handleTestEarthquake}>
-                        <Text style={styles.buttonText}>🌋 Earthquake</Text>
+                    <TouchableOpacity style={[styles.testButton, { backgroundColor: '#2E7D32' }]} onPress={handleTestMissile}>
+                        <Text style={styles.buttonText}>{t.missileAlert}</Text>
                     </TouchableOpacity>
                     <View style={{ height: 10 }} />
                     <TouchableOpacity style={[styles.testButton, { backgroundColor: '#1976D2' }]} onPress={handleTestMissing}>
-                        <Text style={styles.buttonText}>🏃 Missing Person</Text>
+                        <Text style={styles.buttonText}>{t.missingPerson}</Text>
                     </TouchableOpacity>
 
                     <View style={{ height: 20 }} />
                     <TouchableOpacity style={styles.refreshButton} onPress={fetchLatestAlert}>
-                        <Text style={styles.buttonText}>Refresh from Server</Text>
+                        <Text style={styles.buttonText}>{t.refresh}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         );
     }
 
-    // Dynamic Theme based on Settings
-    const theme = getTheme(activeAlert.severity, colorBlindMode);
-
-    // Use the message from the alert if available, otherwise fallback to theme default
-    const displaySubtitle = activeAlert.message || theme.defaultSubtitle;
-
     // Determine icon name: Explicit override > Theme default
-    const displayIconName = activeAlert.icon || theme.iconName;
+    const displayIconName = activeAlert.icon || BaseThemes[activeAlert.severity].iconName;
+
+    // Dynamic Theme based on Settings AND Icon
+    const theme = getTheme(activeAlert.severity, colorBlindMode, displayIconName);
+
+    // Helper to get translated defaults based on severity
+    // Helper to get translated defaults based on severity
+    const getDefaultText = (severity: 'RED' | 'YELLOW' | 'BLUE', icon?: string) => {
+        // Missile Override
+        if ((icon === 'rocket-launch' || icon === 'rocket-launch-outline') && severity === 'RED') {
+            return { title: t.missileTitle, sub: t.missileMsg, btn: t.redButton };
+        }
+
+        switch (severity) {
+            case 'RED': return { title: t.redTitle, sub: t.redSubtitle, btn: t.redButton };
+            case 'YELLOW': return { title: t.yellowTitle, sub: t.yellowSubtitle, btn: t.yellowButton };
+            case 'BLUE': return { title: t.blueTitle, sub: t.blueSubtitle, btn: t.blueButton };
+        }
+    };
+
+    const defaults = getDefaultText(activeAlert.severity, displayIconName);
+    const displaySubtitle = activeAlert.message || defaults.sub;
 
     return (
         <SafeAreaView style={[styles.alertContainer, { backgroundColor: theme.backgroundColor }]}>
@@ -162,7 +177,7 @@ const FullScreenAlert = () => {
                 )}
 
                 <Text style={[styles.alertTitle, { color: theme.textColor }]}>
-                    {theme.defaultTitle}
+                    {defaults.title}
                 </Text>
 
                 <Text style={[styles.alertSubtitle, { color: theme.textColor }]}>
@@ -176,7 +191,7 @@ const FullScreenAlert = () => {
                     onPress={clearAlert}
                 >
                     <Text style={[styles.actionButtonText, { color: theme.textColor }]}>
-                        {theme.buttonText}
+                        {defaults.btn}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -243,10 +258,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
     },
+    settingsRow: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
     accessibilityButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20,
         padding: 10,
         backgroundColor: '#f0f0f0',
         borderRadius: 20,

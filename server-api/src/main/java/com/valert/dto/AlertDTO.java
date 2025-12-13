@@ -12,4 +12,5 @@ public class AlertDTO {
     private String message;
     private String timestamp;
     private String location;
+    private String icon; // Optional icon name (e.g., "fire-alert")
 }

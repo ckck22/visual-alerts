@@ -74,17 +74,21 @@ public class DisasterAlertService {
 
             if (row.isArray() && row.size() > 0) {
                 JsonNode firstAlert = row.get(0);
-                String msg = firstAlert.path("msg").asText();
-                String location = firstAlert.path("location_name").asText();
-                String createDate = firstAlert.path("create_date").asText();
+                String msg = firstAlert.path("MSG_CN").asText(); // Official: MSG_CN
+                String location = firstAlert.path("RCPTN_RGN_NM").asText(); // Official: RCPTN_RGN_NM
+                String createDate = firstAlert.path("CRT_DT").asText(); // Official: CRT_DT
+                String emergencyStep = firstAlert.path("EMRG_STEP_NM").asText(); // Official: EMRG_STEP_NM
+                String disasterType = firstAlert.path("DST_SE_NM").asText(); // Official: DST_SE_NM
 
-                String severity = determineSeverity(msg);
+                String severity = determineSeverity(emergencyStep, disasterType, msg);
+                String icon = determineIcon(disasterType);
 
                 this.cachedAlert = new AlertDTO(
                         severity,
                         msg,
                         createDate,
-                        location);
+                        location,
+                        icon);
                 logger.info("Successfully updated cached alert: {}", msg);
             } else {
                 logger.info("No alerts found in response or invalid structure.");
@@ -99,8 +103,23 @@ public class DisasterAlertService {
         return cachedAlert;
     }
 
-    private String determineSeverity(String msg) {
-        if (msg.contains("경보") || msg.contains("대피") || msg.contains("위험")) {
+    private String determineSeverity(String step, String type, String msg) {
+        // 1. Check Official Emergency Step
+        if (step != null) {
+            if (step.contains("위급") || step.contains("긴급"))
+                return "RED";
+            if (step.contains("안전"))
+                return "YELLOW";
+        }
+
+        // 2. Check Disaster Type
+        if (type != null) {
+            if (type.contains("지진") || type.contains("화재") || type.contains("산사태") || type.contains("공습"))
+                return "RED";
+        }
+
+        // 3. Fallback to Message Keywords
+        if (msg.contains("경보") || msg.contains("대피") || msg.contains("위험") || msg.contains("지진")) {
             return "RED";
         } else if (msg.contains("주의보")) {
             return "YELLOW";
@@ -108,11 +127,28 @@ public class DisasterAlertService {
         return "BLUE";
     }
 
+    private String determineIcon(String type) {
+        if (type == null)
+            return null;
+        if (type.contains("화재") || type.contains("산불"))
+            return "fire-alert";
+        if (type.contains("지진"))
+            return "pulse";
+        if (type.contains("호우") || type.contains("홍수") || type.contains("태풍"))
+            return "weather-pouring";
+        if (type.contains("폭염"))
+            return "weather-sunny-alert";
+        if (type.contains("대설"))
+            return "weather-snowy-heavy";
+        return null; // Fallback to frontend default
+    }
+
     private AlertDTO getMockAlert() {
         return new AlertDTO(
                 "RED",
                 "[MOCK] Fire Alert in Seoul. Please evacuate immediately.",
                 LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME),
-                "Seoul, Korea");
+                "Seoul, Korea",
+                "fire-alert");
     }
 }

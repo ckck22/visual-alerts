@@ -11,32 +11,40 @@ export interface AlertTheme {
 
 import { ColorBlindMode } from '../store/settingsStore';
 
-export const getTheme = (severity: AlertSeverity, mode: ColorBlindMode = ColorBlindMode.NONE): AlertTheme => {
-    const baseTheme = BaseThemes[severity];
+export const getTheme = (severity: AlertSeverity, mode: ColorBlindMode = ColorBlindMode.NONE, iconName?: string): AlertTheme => {
+    let theme = { ...BaseThemes[severity] };
 
-    // Accessibility Overrides
+    // 1. Icon-based Overrides (Stylistic, Lower Priority)
+    // Missile/Air Raid (Rocket) -> Green Theme
+    if (iconName === 'rocket-launch' || iconName === 'rocket-launch-outline') {
+        theme.backgroundColor = '#2E7D32'; // Military/Dark Green
+        theme.textColor = '#FFFFFF';
+    }
+
+    // 2. Accessibility Overrides (High Priority)
     if (mode === ColorBlindMode.PROTANOPIA || mode === ColorBlindMode.DEUTERANOPIA) {
         // Red-Green weakness: Avoid Red/Green confusion. Use Magenta/Blue-Yellow.
+        // This overrides the "Green" missile alert to Magenta if it's considered RED severity (which it is)
         if (severity === 'RED') {
-            return { ...baseTheme, backgroundColor: '#D500F9' }; // Magenta/Purple for Danger
+            theme.backgroundColor = '#D500F9'; // Magenta/Purple for Danger
         }
         if (severity === 'YELLOW') {
-            return { ...baseTheme, backgroundColor: '#FFD600' }; // High Viz Yellow
+            theme.backgroundColor = '#FFD600'; // High Viz Yellow
         }
     } else if (mode === ColorBlindMode.TRITANOPIA) {
         // Blue-Yellow weakness: Avoid Blue/Purple confusion. Use Cyan/Teal.
         if (severity === 'BLUE') {
-            return { ...baseTheme, backgroundColor: '#00BFA5' }; // Teal/Cyan
+            theme.backgroundColor = '#00BFA5'; // Teal/Cyan
         }
         if (severity === 'RED') {
-            return { ...baseTheme, backgroundColor: '#FF5252' }; // Salmon Red (distinct from black)
+            theme.backgroundColor = '#FF5252'; // Salmon Red (distinct from black)
         }
     }
 
-    return baseTheme;
+    return theme;
 };
 
-const BaseThemes: Record<AlertSeverity, AlertTheme> = {
+export const BaseThemes: Record<AlertSeverity, AlertTheme> = {
     RED: {
         backgroundColor: '#D32F2F', // Deep Red
         textColor: '#FFFFFF',

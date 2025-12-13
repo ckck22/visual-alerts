@@ -15,26 +15,21 @@ The application implements a standard client-server architecture:
 - **Database**: An H2 in-memory database (configurable for persistent SQL storage) used for alert history and user preference storage.
 
 ## Key Technical Features
-
-### Adaptive Cognitive-Load Engine
-- **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (red-blind), Deuteranopia (green-blind), and Tritanopia (blue-blind) to ensure universal perceptibility
-- **Context-Aware Visuals**: High-contrast modes and specialized palettes optimized for different vision deficiencies
-
-### Multisensory Integration
-- **Blinking Animations**: 4Hz visual flashing for RED-level alerts to capture immediate attention
-- **Haptic Feedback**: Custom vibration patterns synchronized with alert severity
-- **Rich Notifications**: System notifications with embedded media (e.g., map locations, hazard photos)
-
-### Expanded Alert Types
-- **Earthquake**: Seismograph-style pulse visualization for immediate recognition
-- **Heavy Rain**: Dedicated flood/precipitation iconography
-- **Fire**: Critical thermal alert visuals
-- **Missing Person**: Blue-coded informational alerts
-
-### Additional Capabilities
-- **Real-Time Integration**: Polls external government disaster APIs to fetch and standardize alert data
-- **Background Processing**: Handles background fetch tasks to ensure alert delivery even when the app is inactive
-- **State Management**: Utilizes Zustand for efficient global state management (alerts and settings)
+- **Adaptive Cognitive-Load Engine**:
+    - **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (Red-Blind), Deuteranopia (Green-Blind), and Tritanopia (Blue-Blind), ensuring universal perceptibility.
+    - **Context-Aware Visuals**: High-contrast modes and specific palettes for different vision deficiencies.
+- **Multisensory Integration**:
+    - **Blinking Animations**: 4Hz visual flashing for "RED" alerts to seize immediate attention.
+    - **Haptic Feedback**: Custom vibration patterns synchronized with alert severity.
+    - **Rich Notifications**: System notifications with attached images (e.g., Map location, Hazard photo).
+- **Expanded Alert Types**:
+    - **Earthquake**: Seismograph-style pulse visualization for immediate recognition.
+    - **Heavy Rain**: Dedicated flood/rain iconography.
+    - **Fire**: Critical thermal alert visuals.
+    - **Missing Person**: Blue-coded information alerts.
+- **Real-Time Integration**: Polls external government disaster APIs to fetch and standardize alert data.
+- **Background Processing**: Handles background fetch tasks to ensure alerts are received even when the app is not in the foreground.
+- **State Management**: Uses Zustand for efficient global state management (Alerts + Settings).
 
 ## Technology Stack
 
