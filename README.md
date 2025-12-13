@@ -1,31 +1,40 @@
-# V-Alert (Research-Driven Visual Emergency Alert System)
+# V-Alert
 
 ## Overview
-V-Alert is a cognitive-science-based emergency alert system designed to solve the "alert fatigue" and cognitive overload problems found in traditional text-based alert systems. By utilizing color-coded, high-contrast visual signals and haptic feedback, V-Alert reduces user reaction time and ensures intuitive understanding of emergency severity (Red, Yellow, Blue).
+
+V-Alert is a cognitive-science-based emergency alert system designed to address alert fatigue and cognitive overload inherent in traditional text-based alert systems. By leveraging color-coded, high-contrast visual signals and haptic feedback, V-Alert reduces user reaction time and ensures intuitive comprehension of emergency severity levels (Red, Yellow, Blue).
 
 ## System Architecture
-The application follows a standard **Client-Server Architecture**:
 
-- **Client (Frontend)**: A React Native mobile application (Expo) that handles user interaction, visual rendering of alerts, and device-specific features (haptics, notifications). It communicates with the backend via REST APIs.
-- **Server (Backend)**: A Spring Boot application that manages alert data, processes real-time disaster feeds (from external APIs like the Korean Ministry of Interior and Safety), and sends push notifications to clients via Firebase Cloud Messaging (FCM).
-- **Database**: An H2 in-memory database (configurable to persistent SQL) for storing alert history and user preferences.
+The application implements a standard client-server architecture:
+
+- **Client (Frontend)**: A React Native mobile application built with Expo that manages user interaction, visual alert rendering, and device-specific features (haptics, notifications). The client communicates with the backend through RESTful APIs.
+
+- **Server (Backend)**: A Spring Boot application responsible for alert data management, real-time disaster feed processing (from external APIs such as the Korean Ministry of Interior and Safety), and push notification delivery via Firebase Cloud Messaging (FCM).
+
+- **Database**: An H2 in-memory database (configurable for persistent SQL storage) used for alert history and user preference storage.
 
 ## Key Technical Features
-- **Adaptive Cognitive-Load Engine**:
-    - **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (Red-Blind), Deuteranopia (Green-Blind), and Tritanopia (Blue-Blind), ensuring universal perceptibility.
-    - **Context-Aware Visuals**: High-contrast modes and specific palettes for different vision deficiencies.
-- **Multisensory Integration**:
-    - **Blinking Animations**: 4Hz visual flashing for "RED" alerts to seize immediate attention.
-    - **Haptic Feedback**: Custom vibration patterns synchronized with alert severity.
-    - **Rich Notifications**: System notifications with attached images (e.g., Map location, Hazard photo).
-- **Expanded Alert Types**:
-    - **Earthquake**: Seismograph-style pulse visualization for immediate recognition.
-    - **Heavy Rain**: Dedicated flood/rain iconography.
-    - **Fire**: Critical thermal alert visuals.
-    - **Missing Person**: Blue-coded information alerts.
-- **Real-Time Integration**: Polls external government disaster APIs to fetch and standardize alert data.
-- **Background Processing**: Handles background fetch tasks to ensure alerts are received even when the app is not in the foreground.
-- **State Management**: Uses Zustand for efficient global state management (Alerts + Settings).
+
+### Adaptive Cognitive-Load Engine
+- **Color-Blind Accessibility**: Dynamic visual adjustments for Protanopia (red-blind), Deuteranopia (green-blind), and Tritanopia (blue-blind) to ensure universal perceptibility
+- **Context-Aware Visuals**: High-contrast modes and specialized palettes optimized for different vision deficiencies
+
+### Multisensory Integration
+- **Blinking Animations**: 4Hz visual flashing for RED-level alerts to capture immediate attention
+- **Haptic Feedback**: Custom vibration patterns synchronized with alert severity
+- **Rich Notifications**: System notifications with embedded media (e.g., map locations, hazard photos)
+
+### Expanded Alert Types
+- **Earthquake**: Seismograph-style pulse visualization for immediate recognition
+- **Heavy Rain**: Dedicated flood/precipitation iconography
+- **Fire**: Critical thermal alert visuals
+- **Missing Person**: Blue-coded informational alerts
+
+### Additional Capabilities
+- **Real-Time Integration**: Polls external government disaster APIs to fetch and standardize alert data
+- **Background Processing**: Handles background fetch tasks to ensure alert delivery even when the app is inactive
+- **State Management**: Utilizes Zustand for efficient global state management (alerts and settings)
 
 ## Technology Stack
 
@@ -39,7 +48,7 @@ The application follows a standard **Client-Server Architecture**:
 ### Backend (API Server)
 - **Framework**: Spring Boot 3.2.0
 - **Language**: Java 17
-- **Database**: H2 Database (In-Memory)
+- **Database**: H2 Database (in-memory)
 - **Build Tool**: Gradle
 - **Integration**: Firebase Admin SDK (for FCM), Jackson Dataformat XML
 
@@ -48,45 +57,49 @@ The application follows a standard **Client-Server Architecture**:
 ### Prerequisites
 - **Node.js**: v18 or LTS
 - **JDK**: Java Development Kit 17
-- **Mobile Development Env**: Android Studio (for Android) or Xcode (for iOS)
+- **Mobile Development Environment**: Android Studio (for Android) or Xcode (for iOS)
 - **Expo Go**: Installed on your physical device (optional, for testing)
 
 ### Installation
 
 #### 1. Clone the Repository
-\`\`\`bash
+```bash
 git clone https://github.com/yourusername/v-alert.git
 cd v-alert
-\`\`\`
+```
 
 #### 2. Backend Setup
-Navigate to the server directory and run the Spring Boot application.
-\`\`\`bash
+Navigate to the server directory and run the Spring Boot application:
+```bash
 cd server-api
 ./gradlew bootRun
-\`\`\`
-The server will start at \`http://localhost:8080\`.
+```
+The server will start at `http://localhost:8080`.
 
 #### 3. Frontend Setup
-Navigate to the client directory and install dependencies.
-\`\`\`bash
+Navigate to the client directory and install dependencies:
+```bash
 cd client-app
 npm install
-\`\`\`
-Start the development server.
-\`\`\`bash
+```
+
+Start the development server:
+```bash
 npx expo start
-\`\`\`
-- Press \`a\` to open in Android Emulator.
-- Press \`i\` to open in iOS Simulator.
-- Scan the QR code to run on a physical device.
+```
+
+- Press `a` to open in Android Emulator
+- Press `i` to open in iOS Simulator
+- Scan the QR code to run on a physical device
 
 ## Future Improvements
-- **Push Notification Integration**: Complete full integration with FCM for push-based (non-polling) alerts.
-- **Geolocation Targeting**: Filter alerts based on the user's precise real-time location.
-- **User Preferences**: Allow users to customize vibration intensity and color blindness modes.
-- **Wearable Support**: Extension for Apple Watch and Galaxy Watch for wrist-based haptics.
-- **Offline Mode**: Cache recent alerts for viewing without internet connection.
+
+- **Enhanced Push Notifications**: Complete full integration with FCM for push-based (non-polling) alert delivery
+- **Geolocation Targeting**: Filter alerts based on users' precise real-time location
+- **User Customization**: Enable users to customize vibration intensity and color blindness modes
+- **Wearable Support**: Extend functionality to Apple Watch and Galaxy Watch for wrist-based haptic alerts
+- **Offline Mode**: Cache recent alerts for offline viewing
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
